@@ -1,0 +1,35 @@
+Station: 250190030
+  mean: 4.366894664842681
+  median: 3.7
+  variance: 40.16237872898659
+  std_dev: 6.337379484375745
+  quartiles: [-0.45  3.7   9.7 ]
+
+Station: 249200910
+  mean: -0.029386590584878938
+  median: 0.1
+  variance: 53.53023485910692
+  std_dev: 7.316435939657158
+  quartiles: [-4.6  0.1  5.8]
+
+Station: 252200230
+  mean: 7.06724960254372
+  median: 6.7
+  variance: 44.95511183118029
+  std_dev: 6.704857331157784
+  quartiles: [ 2.2  6.7 12.9]
+
+Station: 252200150
+  mean: 6.192612859097126
+  median: 5.9
+  variance: 45.08377579950633
+  std_dev: 6.714445308400861
+  quartiles: [ 1.1  5.9 11.9]
+
+Station: 252170110
+  mean: 5.018194254445965
+  median: 4.3
+  variance: 36.986741472525125
+  std_dev: 6.081672588402398
+  quartiles: [0.4  4.3  9.95]
+

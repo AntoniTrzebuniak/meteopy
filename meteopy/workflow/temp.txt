@@ -1,0 +1,70 @@
+
+@cli.command()
+@click.option('--data-type', type=str, required=True, help='Typ danych (np. klimat, opad, synop)')
+@click.option('--parameter', type=str, required=True, help='Parametr do analizy')
+@click.option('--start-date', type=str, required=True, help='Początkowa data w formacie YYYY-MM-DD')
+@click.option('--end-date', type=str, required=True, help='Końcowa data w formacie YYYY-MM-DD')
+@click.option('--stations', type=str, multiple=True, help='Lista ID stacji')
+def plot_time_series(data_type, parameter, start_date, end_date, stations):
+    """Tworzy wykres szeregów czasowych."""
+    click.echo("Tworzenie wykresu szeregów czasowych...")
+    visualizer = IMGWDataVisualizer()
+    visualizer.plot_time_series(data_type, [parameter], start_date, end_date, list(stations))
+    click.echo("Wykres szeregów czasowych został utworzony.")
+
+@cli.command()
+@click.option('--data-type', type=str, required=True, help='Typ danych (np. klimat, opad, synop)')
+@click.option('--parameter', type=str, required=True, help='Parametr do analizy')
+@click.option('--start-date', type=str, required=True, help='Początkowa data w formacie YYYY-MM-DD')
+@click.option('--end-date', type=str, required=True, help='Końcowa data w formacie YYYY-MM-DD')
+@click.option('--stations', type=str, multiple=True, help='Lista ID stacji')
+def plot_distribution(data_type, parameter, start_date, end_date, stations):
+    """Tworzy histogram oraz wykres pudełkowy."""
+    click.echo("Tworzenie histogramu oraz wykresu pudełkowego...")
+    visualizer = IMGWDataVisualizer()
+    visualizer.plot_distribution(data_type, [parameter], start_date, end_date, list(stations))
+    click.echo("Histogram oraz wykres pudełkowy zostały utworzone.")
+
+@cli.command()
+@click.option('--data-type', type=str, required=True, help='Typ danych (np. klimat, opad, synop)')
+@click.option('--start-date', type=str, required=True, help='Początkowa data w formacie YYYY-MM-DD')
+@click.option('--end-date', type=str, required=True, help='Końcowa data w formacie YYYY-MM-DD')
+@click.option('--till-predict-date', type=str, required=True, help='Data do której przewidujemy wartości w formacie YYYY-MM-DD')
+@click.option('--stations', type=str, multiple=True, help='Lista ID stacji')
+@click.option('--parameter', type=str, required=True, help='Parametr do przewidywania')
+def forecast(data_type, start_date, end_date, till_predict_date, stations, parameter):
+    """Tworzy prognozę wartości na podstawie danych historycznych."""
+    click.echo("Tworzenie prognozy...")
+    forecaster = IMGWSimpleForecaster()
+    forecaster.plot_forecast(data_type, start_date, end_date, till_predict_date, list(stations), parameter)
+    click.echo("Prognoza została utworzona.")
+
+if __name__ == "__main__":
+    cli()
+
+
+"""
+@cli.command()
+@click.option('--start-year', '-sy', type=int, required=True, help='Rok początkowy')
+@click.option('--end-year', type=int, required=True, help='Rok końcowy')
+@click.option('--data-type', type=int, required=True, help='Typ danych: 1 - klimat, 2 - opad, 3 - synop')
+def fetch_data(start_year, end_year, data_type):
+    """'''Pobierz dane meteorologiczne.'''"""
+    if data_type not in [1, 2, 3]:
+        raise click.BadParameter('Typ danych musi być jednym z: 1 - klimat, 2 - opad, 3 - synop')
+    click.echo("Pobieranie danych...")
+    fetch_data(start_year, end_year, data_type)
+    click.echo("Pobieranie zakończone.")
+
+
+@cli.command()
+@click.option('--mode', type=int, required=True, help='mode (int): Tryb uzupełniania brakujących danych:\n1 - zostawia brakujące dane bez zmian.\n2 - uzupełnia brakujące dane wartością z poprzedniego dnia.\n3 - uzupełnia brakujące dane średnią z 50 poprzednich dni.')
+def preprocess_data(missing_data_strategy):
+    """'''Przetwórz pobrane dane.'''"""
+    if missing_data_strategy not in [1, 2, 3]:
+        raise click.BadParameter('Strategia radzenia sobie z brakami danych musi być jednym z: 1, 2, 3')
+    click.echo("Przetwarzanie danych...")
+    preprocess_data(missing_data_strategy)
+    click.echo("Przetwarzanie zakończone.")
+
+"""
