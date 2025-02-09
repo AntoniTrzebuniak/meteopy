@@ -18,16 +18,17 @@ class IMGWStats:
         self.logger = get_logger(__name__)
 
     def calculate_basic_stat(self, stations: list[str], data_type: str, parameters: list[str]) -> None:
-        """        Process statistics for the given stations, data type, and parameter,
-            and save to a file in data/statistics/<data_type>.
-        For each parameter statistics are calculated separately and saved to separate files.
+        """Process statistics for the given stations, data type, and parameter, and save to a file in
+        data/statistics/<data_type>. For each parameter statistics are calculated separately and saved to separate
+        files.
 
-        Args:
-stations: List of station IDs to include in the statistics
-        data_type: Type of data ['klimat', 'opad', 'synop']
-parameters: List of string parameters to calculate statistics for
-        Returns:
-            None
+                Args:
+        stations: List of station IDs to include in the statistics
+                data_type: Type of data ['klimat', 'opad', 'synop']
+        parameters: List of string parameters to calculate statistics for
+                Returns:
+                    None
+
         """
         if stations == []:
             stations = Dirs.get_available_stations_paths(data_type)
@@ -50,7 +51,7 @@ parameters: List of string parameters to calculate statistics for
                     data_frames.append(df)
                 else:
                     print(f"File {file_path} does not exist.")
-            
+
             if not data_frames:
                 print("No data available for the given stations.")
                 return
@@ -93,6 +94,7 @@ parameters: List of string parameters to calculate statistics for
 
         Returns:
             None
+
         """
         if stations == []:
             stations = Dirs.get_available_stations_paths(data_type)
@@ -107,7 +109,7 @@ parameters: List of string parameters to calculate statistics for
                 data_frames.append(df)
             else:
                 print(f"File {file_path} does not exist.")
-        
+
         if not data_frames:
             print("No data available for the given stations.")
             return
@@ -133,4 +135,3 @@ parameters: List of string parameters to calculate statistics for
                 file.write(f"Station: {station}\n")
                 file.write(f"  Correlation between {parameter1} and {parameter2}: {correlation}\n")
                 file.write("\n")
-

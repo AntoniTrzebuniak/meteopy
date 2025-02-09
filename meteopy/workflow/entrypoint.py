@@ -3,7 +3,7 @@ import click
 from meteopy.workflow.download import download
 from meteopy.workflow.basic_summary import basic_summary
 from meteopy.workflow.full_analysis import full_analysis
-from meteopy.workflow.destruktor import drop_data
+from meteopy.workflow.destructor import drop_data
 
 @click.group()
 def cli():

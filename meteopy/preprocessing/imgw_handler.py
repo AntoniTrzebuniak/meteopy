@@ -30,6 +30,7 @@ class IMGWDataHandler:
             csv_file (Path): Ścieżka do pliku wejściowego.
             output_dir (Path): Katalog, w którym zapisane zostaną pliki wyjściowe.
             encoding (str): Kodowanie pliku wejściowego i wyjściowego.
+
         """
         try:
             df = pd.read_csv(csv_file, encoding=encoding)
@@ -73,8 +74,8 @@ class IMGWDataHandler:
         self.logger.info("Podział plików zakończony.")
 
     def replace_with_na(self, data_frame: pd.DataFrame, column_indices: list[int]) -> pd.DataFrame:
-        """Sprawdza, czy w DataFrame w kolumnie o podanym indeksie (lub liście indeksów) znajduje się wartość "8",
-        a następnie zmienia dane w poprzedniej kolumnie w tym wierszu na NaN.
+        """Sprawdza, czy w DataFrame w kolumnie o podanym indeksie (lub liście indeksów) znajduje się wartość "8", a
+        następnie zmienia dane w poprzedniej kolumnie w tym wierszu na NaN.
 
         Args:
             data_frame (pd.DataFrame): DataFrame do przetworzenia.
@@ -82,6 +83,7 @@ class IMGWDataHandler:
 
         Returns:
             pd.DataFrame: Zaktualizowany DataFrame.
+
         """
         for col_index in column_indices:
             if col_index > 0:  # Upewnij się, że nie próbujemy zmienić danych w kolumnie o indeksie -1
@@ -102,6 +104,7 @@ class IMGWDataHandler:
 
         Returns:
             pd.DataFrame: DataFrame z uzupełnionymi danymi.
+
         """
         if mode == 1:
             # Tryb 1: zostawia brakujące dane bez zmian
@@ -131,6 +134,7 @@ class IMGWDataHandler:
             1 - zostawia brakujące dane bez zmian.
             2 - uzupełnia brakujące dane wartością z poprzedniego dnia.
             3 - uzupełnia brakujące dane średnią z 50 poprzednich dni.
+
         """
         Directory = Dirs.SEPARATED_DIR / "klimat"
         if Directory.exists():
@@ -152,9 +156,9 @@ class IMGWDataHandler:
                 self.logger.debug("Usunięto kolumny z niepotrzebnymi danymi")
                 df.columns=["Kod_stacji", "Nazwa_stacji", "Year", "Month", "Day", "Maksymalna_temperatura_dobowa_[C]", "Minimalna_temperatura_dobowa_[C]", "Srednia_temperatura_dobowa_[C]", "Temperatura_minimalna_przy_gruncie_[C]", "Suma_dobowa_opadow_[mm]", "Wysokosc_pokrywy_snieznej_[cm]"]
                 df.sort_values( ['Year', 'Month', 'Day'], ascending=[True, True, True], inplace=True )
-                
+
                 self.logger.debug("Filling missing data")
-                df = self.fill_missing_data(df, df.columns[[6,7,8]], mode)     
+                df = self.fill_missing_data(df, df.columns[[6,7,8]], mode)
                 df[df.columns[[9,10]]] = df[df.columns[[9,10]]].fillna(0)
                 self.logger.debug("Zmiana daty")
                 df["Data"] = pd.to_datetime(df[['Year', 'Month', 'Day']].rename(columns={"Year": "year", "Month": "month", "Day": "day"}))

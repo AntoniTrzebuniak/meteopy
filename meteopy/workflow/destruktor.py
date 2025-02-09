@@ -6,8 +6,7 @@ from meteopy.consts.dirs import Dirs
 
 @click.command()
 def drop_data() -> None:
-    """
-    Usuwa wszystkie pobrane dane
+    """Usuwa wszystkie pobrane dane.
 
     Funkcja próbuje usunąć katalog data/separated/ oraz wszystkie pliki i podkatalogi w nim zawarte.
     Jeśli operacja się powiedzie, wyświetla komunikat o sukcesie. W przeciwnym razie, wyświetla
@@ -19,6 +18,7 @@ def drop_data() -> None:
 
     Zwraca:
         None
+
     """
 
     try:
@@ -26,4 +26,3 @@ def drop_data() -> None:
         print(f'Successfully deleted {Dirs.SEPARATED_DIR}')
     except Exception as e:
         print(f'Failed to delete {Dirs.SEPARATED_DIR}. Reason: {e}')
-

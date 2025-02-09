@@ -29,6 +29,7 @@ class IMGWDataVisualizer:
             start_date (str): Początkowa data w formacie 'YYYY-MM-DD'.
             end_date (str): Końcowa data w formacie 'YYYY-MM-DD'.
             stations (list[str]): Lista ID stacji. Jeśli None, wykresy są tworzone dla wszystkich stacji.
+
         """
         if parameters == []:
             self.logger.info("Analiza dla wszystkich parametrów")
@@ -36,7 +37,7 @@ class IMGWDataVisualizer:
 
         for parameter in parameters:
             if parameter not in self.parameter_map[data_type]:
-                self.logger.error("Parametr '%s' nie jest dostępny dla typu danych '%s'.", parameter, data_type)
+                self.logger.error("Parameter '%s' nie jest dostępny dla typu danych '%s'.", parameter, data_type)
                 return
             datadir = Path(self.data_dir / data_type)
             available_stations = [d.name for d in datadir.iterdir()]
@@ -96,6 +97,7 @@ class IMGWDataVisualizer:
 
         Returns:
             None
+
         """
         if parameters == []:
             self.logger.info("Analiza dla wszystkich parametrów")
@@ -103,7 +105,7 @@ class IMGWDataVisualizer:
 
         for parameter in parameters:
             if parameter not in self.parameter_map[data_type]:
-                self.logger.error("Parametr '%s' nie jest dostępny dla typu danych '%s'.", parameter, data_type)
+                self.logger.error("Parameter '%s' nie jest dostępny dla typu danych '%s'.", parameter, data_type)
                 return
             datadir = Path(self.data_dir / data_type)
             available_stations = [d.name for d in datadir.iterdir()]

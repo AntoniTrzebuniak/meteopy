@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 @click.command()
 def download():
-    """Przeprowadź cały proces pobierania i przetwarzania danych krok po kroku."""
+    """Przeprowadź cały process pobierania i przetwarzania danych krok po kroku."""
     start_year = click.prompt("Podaj rok początkowy", type=int)
     end_year = click.prompt("Podaj rok końcowy", type=int)
     data_type = click.prompt("Podaj typ danych: 1 - klimat, 2 - opad, 3 - synop", type=int)

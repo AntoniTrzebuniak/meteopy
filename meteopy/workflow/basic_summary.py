@@ -23,7 +23,7 @@ def basic_summary(data_type: int) -> None:
 
     PARAMETERS
         data_type (int)
-        The type of data for which statistics are to be generated. 
+        The type of data for which statistics are to be generated.
         Valid values are 1 - klimat, 2 - opad, or 3 - synop.
 
     DESCRIPTION
@@ -39,7 +39,7 @@ def basic_summary(data_type: int) -> None:
         7. Randomly selects 5 stations (or fewer if less than 5 are available).
         8. Processes data for each selected station and generates statistics.
 
-        If any errors occur during the process (e.g., invalid data type or parameter selection), 
+        If any errors occur during the process (e.g., invalid data type or parameter selection),
         appropriate error messages are logged.
 
         Note: Data should be downloaded and preprocessed before running this function.
@@ -61,14 +61,14 @@ def basic_summary(data_type: int) -> None:
     for idx, param in enumerate(parameter_list, start=1):
         click.echo(f"{idx}. {param}")
     while True:
-        parameter_index = click.prompt("Wybierz numer parametru z listy (0 aby zakończyć)", type=int)
+        parameter_index = click.prompt("Wybierz number parametru z listy (0 aby zakończyć)", type=int)
         if parameter_index == 0:
             break
         try:
             parameter = parameter_list[parameter_index - 1]
             selected_parameters.append(parameter)
         except IndexError:
-            logger.error("Niepoprawny numer parametru. Wybierz numer od 1 do %d.", len(parameter_list))
+            logger.error("Niepoprawny number parametru. Wybierz number od 1 do %d.", len(parameter_list))
             continue
 
     if not selected_parameters:

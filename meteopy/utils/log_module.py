@@ -1,12 +1,10 @@
-
 from __future__ import annotations
+
 import logging
 from pathlib import Path
-
 from meteopy.consts.dirs import Dirs
 
-
-def get_logger(name: str, log_file: Path = Dirs.LOG_DIR / "app.log", level: int = logging.INFO) -> logging.Logger:
+def get_logger(name: str, level: int = logging.INFO, log_file: Path = Dirs.LOG_DIR / "app.log") -> logging.Logger:
     """Konfiguruje logger dla aplikacji.
 
     Args:
@@ -21,34 +19,20 @@ def get_logger(name: str, log_file: Path = Dirs.LOG_DIR / "app.log", level: int 
     log_file.parent.mkdir(parents=True, exist_ok=True)
 
     logger = logging.getLogger(name)
-    logger.setLevel(level)
+    logger.setLevel(logging.DEBUG)
 
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
-    file_handler = logging.FileHandler(log_file)
+    file_handler = logging.FileHandler(log_file, mode="w")
     file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.DEBUG)
 
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(formatter)
+    stream_handler.setLevel(level)
 
     if not logger.handlers:
         logger.addHandler(file_handler)
-        logger.addHandler(stream_handler)
-
-    return logger
-
-def get_logger(
-        name: str,
-        log_lvl: int = logging.DEBUG,   ) -> logging.Logger:
-    logger = logging.getLogger(name)
-    logger.setLevel(log_lvl)
-
-    if not logger.handlers:
-        formatter = logging.Formatter(fmt="%(asctime)s : %(name)s : %(levelname)s : %(message)s")
-
-        stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.INFO)
-        stream_handler.setFormatter(formatter)
         logger.addHandler(stream_handler)
 
     return logger

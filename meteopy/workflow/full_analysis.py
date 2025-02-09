@@ -14,10 +14,9 @@ logger = get_logger(__name__)
 
 @click.command()
 def full_analysis():
-    """Przeprowadź cały proces pobierania i wygeneruje wszystkie wykresy dla wszystkich stacji dla wszystkich parametrów
-    (UWAGA: może to potrwać dłuższą chwilę i zająć nawet 10GB RAMU (dla 1000 stacji), gdyż wsystkie stację są nanoszone
-    na jeden wykres dla IMGWDataVisualizer).
-    """
+    """Przeprowadź cały process pobierania i wygeneruje wszystkie wykresy dla wszystkich stacji dla wszystkich
+    parametrów (UWAGA: może to potrwać dłuższą chwilę i zająć nawet 10GB RAMU (dla 1000 stacji), gdyż wsystkie stację są
+    nanoszone na jeden wykres dla IMGWDataVisualizer)."""
     start_year = click.prompt("Podaj rok początkowy", type=int)
     end_year = click.prompt("Podaj rok końcowy", type=int)
     data_type = click.prompt("Podaj typ danych: 1 - klimat, 2 - opad, 3 - synop", type=int)
