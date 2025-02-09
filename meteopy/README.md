@@ -10,7 +10,10 @@
     ```
 
 2. **Zainstalowanie pakietu**
-    uruchomić z folderu repozytorium komendę pip install -e .
+    uruchomić z folderu repozytorium komendę 
+```bash
+pip install -e .
+```
 
 ## Opis funkcjonalności
 
