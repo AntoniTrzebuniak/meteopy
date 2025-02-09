@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from .consts import *
 from .data_fetchers import *
-from .eda import eda
+from .eda import *
 from .forecasting import *
 from .preprocessing import *
 from .statistics import *
@@ -25,5 +25,7 @@ __all__ += ["cli"]
 
 if __name__ == "__main__":
     from .workflow.entrypoint import cli
-
     cli()
+
+
+#jakaś zmiana
