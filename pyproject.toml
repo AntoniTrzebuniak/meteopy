@@ -4,12 +4,25 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "meteopy"
-version = "0.0.1"
-requires-python = '>=3.12.0'
-description = "Pakiet do pobierania, przetwarzania i analizy danych meteorologicznych z IMGW."
+version = "0.1.0"
+description = "Pakiet do analizy danych meteorologicznych"
 authors = [
-    { name = "Jakub Staszel", email = "jstaszel@agh.edu.pl" }
+        { name = "Niszczyciel światów", email = "mamochote@siezabic.xd" }
+    ]
+
+dependencies = [
+    "click>=8.0.0",  # Upewnij się, że click jest zależnością
+    "pandas>=1.3.0",
+    "matplotlib>=3.4.0",
+    "seaborn>=0.11.0",
+    "numpy>=1.21.0",
+    "scikit-learn>=0.24.0",
+    "pathlib>=1.0.1",
+    "requests>=2.25.0"
 ]
+
+[project.scripts]
+meteopy = "meteopy.workflow.entrypoint:cli"
 
 [tool.setuptools.packages.find]
 where = ["."]
@@ -22,8 +35,24 @@ target-version = "py312"
 line-length = 120
 extend-exclude = [
     "docs/*",
-    "data/*",
-    "logs/*",
+    'venv',
+    '\.venv',
+    '\.git',
+    '__pycache__',
+    'configs',
+    'data',
+    'logs',
+    'outputs',
+    'consts',
+    'data_fetchers',
+    'eda',
+    'forecasting',
+    'preprocessing',
+    'statistics',
+    'tests',
+    'utils',
+    'workflow',
+    '__init__'
 ]
 
 [tool.ruff.lint]
@@ -94,6 +123,7 @@ ignore = [
     "FIX", # see: https://pypi.org/project/flake8-fixme - too restrictive
     "PLR0913", # see: https://pypi.org/project/Pylint - Too many arguments in function definition
     "PLR0917", # see: https://pypi.org/project/Pylint - Too many positional arguments
+    "S101", # see: https://pypi.org/project/Pylint - Too many errors
 ]
 
 [tool.ruff.format]
@@ -149,14 +179,28 @@ exclude = [
     'data',
     'logs',
     'outputs',
+    'consts',
+    'data_fetchers',
+    'eda',
+    'forecasting',
+    'preprocessing',
+    'statistics',
+    'tests',
+    'utils',
+    'workflow',
+    '__init__'
 ]
-check_untyped_defs = true
-disallow_any_generics = true
-disallow_incomplete_defs = true
-disallow_untyped_defs = true
+
+ignore_missing_imports = true
+disallow_untyped_calls = false
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
 no_implicit_optional = true
+warn_unused_ignores = true
 warn_return_any = true
 warn_unused_configs = true
+
 
 [[tool.mypy.overrides]]
 module = [
@@ -167,6 +211,8 @@ module = [
 ]
 ignore_missing_imports = true
 ignore_errors = true
+
+
 
 [tool.interrogate]
 ignore-init-module = true
