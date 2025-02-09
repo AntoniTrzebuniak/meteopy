@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from .consts import consts
-from .data_fetchers import data_fetchers
+from .consts import *
+from .data_fetchers import *
 from .eda import eda
-from .forecasting import forecasting
-from .preprocessing import preprocessing
-from .statistics import statistics
-from .utils import utils
-from .workflow import workflow
+from .forecasting import *
+from .preprocessing import *
+from .statistics import *
+from .utils import *
+from .workflow import *
 
 __all__ = []
 __all__ += consts.__all__
