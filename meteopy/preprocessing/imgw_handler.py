@@ -3,7 +3,6 @@ from __future__ import annotations
 import unicodedata
 from pathlib import Path
 
-import chardet
 import numpy as np
 import pandas as pd
 
@@ -15,12 +14,6 @@ class IMGWDataHandler:
     def __init__(self):
         self.logger = get_logger("IMGWDataHandler")
 
-    def detect_encoding(self, file_path):
-        """Wykrywa kodowanie pliku CSV."""
-        with open(file_path, "rb") as f:
-            raw_data = f.read(100000)  # Pobieramy próbkę pliku
-            encoding = chardet.detect(raw_data)["encoding"]
-        return encoding
 
 
     def split_csv_by_station(self, csv_file: Path, output_dir: Path, encoding: str = Dirs.ENCODING):
