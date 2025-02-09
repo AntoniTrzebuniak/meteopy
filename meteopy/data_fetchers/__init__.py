@@ -1,3 +1,5 @@
-from imgw_fetcher import IMGWDataFetcher
+from __future__ import annotations
 
-__all__=['IMGWDataFetcher']
+from .imgw_fetcher import IMGWDataFetcher
+
+__all__ = ["IMGWDataFetcher"]

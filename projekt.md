@@ -16,7 +16,7 @@ Stwórz subpakiet `utils`, w którym dodasz moduł `logging` wraz z zaimplemento
 
 Stwórz subpakiet `consts`, który będzie służył do przechowywania modułów ze stałymi zmiennymi. Przyjęło się, że zmienne stałe zapisywane są z użyciem dużych liter (np. `ROOT_URL = "https://danepubliczne.imgw.pl"`).
 
-* W tym subpakiecie stwórz moduł `dirs`, gdzie przechowywane będą informacje o lokalnych ścieżkach w projekcie. Użyj tam klasy `Path` z biblioteki `pathlib`.
+- W tym subpakiecie stwórz moduł `dirs`, gdzie przechowywane będą informacje o lokalnych ścieżkach w projekcie. Użyj tam klasy `Path` z biblioteki `pathlib`.
 
 ### Etap 1 - pobieranie danych
 
@@ -24,8 +24,8 @@ W ramach subpakietu o nazwie `data_fetchers` należy przygotować klasę służ�
 
 W module `imgw_fetcher` stwórz klasę `IMGWDataFetcher`, która posiadać będzie następujące metody:
 
-* `fetch` - do przeszukiwania katalogów w oparciu o dostępną strukturę - dodaj odpowiednie argumenty,
-* `download_file` - do pobrania pliku pod wskazanym URL - pliki mają się pobierać do podkatalogu `./data/downloaded`; metoda musi mieć argument `unzip` typu `bool`, który będzie definiował czy plik ma być wypakowany,
+- `fetch` - do przeszukiwania katalogów w oparciu o dostępną strukturę - dodaj odpowiednie argumenty,
+- `download_file` - do pobrania pliku pod wskazanym URL - pliki mają się pobierać do podkatalogu `./data/downloaded`; metoda musi mieć argument `unzip` typu `bool`, który będzie definiował czy plik ma być wypakowany,
 
 Do klasy należy napisać odpowiednie testy dla wszystkich jej funkcjonalności.
 
@@ -33,4 +33,4 @@ Do klasy należy napisać odpowiednie testy dla wszystkich jej funkcjonalności.
 
 W ramach subpakietu o nazwie `preprocessing`, w module `imgw_handler` stwórz klasę `IMGWDataHandler`, która będzie służyć do:
 
-* Modyfikacji formy przechowywania danych - napisz metodą `divide_downloaded`, która przetworzy pobrane dane i zapisze je do osobnych plików w podkatalogu `./data/separated`. Jako propozycja tego podziału, każda stacja ma mieć swój plik, w którym będą przechowywane wszystkie jej parametry.
+- Modyfikacji formy przechowywania danych - napisz metodą `divide_downloaded`, która przetworzy pobrane dane i zapisze je do osobnych plików w podkatalogu `./data/separated`. Jako propozycja tego podziału, każda stacja ma mieć swój plik, w którym będą przechowywane wszystkie jej parametry.

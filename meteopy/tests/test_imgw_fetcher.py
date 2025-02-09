@@ -1,4 +1,5 @@
-import pytest
+from __future__ import annotations
+import requests
 from meteopy.data_fetchers.imgw_fetcher import IMGWDataFetcher
 
 
@@ -12,6 +13,7 @@ def test_fetch(mocker):
     result = fetcher.fetch("https://example.com/catalog", "2023")
 
     assert result == ["file2_2023.csv"]
+
 
 def test_download_file(mocker, tmp_path):
     """Testuje metodę download_file."""
@@ -30,6 +32,7 @@ def test_download_file(mocker, tmp_path):
 
     assert local_file.exists()
 
+
 def test_download_and_unzip(mocker, tmp_path):
     """Testuje pobieranie i wypakowywanie pliku ZIP."""
     mocker.patch("requests.get")
@@ -47,4 +50,4 @@ def test_download_and_unzip(mocker, tmp_path):
     fetcher.download_file(file_url, unzip=True)
 
     assert local_file.exists()
-    zipfile.ZipFile.assert_called_once_with(local_file, 'r')
+    zipfile.ZipFile.assert_called_once_with(local_file, "r")
