@@ -1,11 +1,15 @@
-from meteopy.data_fetchers.imgw_fetcher import IMGWDataFetcher
-from meteopy.utils.log_module import get_logger
+from __future__ import annotations
+
 from meteopy.consts.dirs import Dirs
+from meteopy.statistics.imgw_stats import IMGWStats
 
-dir = Dirs()
-print("\n", dir.get_root_path(), '\n')
-print("\n", dir.get_data_path(), '\n')
+"""
+fetcher = KODataFetcher()
+fetcher.fetch(2019, 2020, 1)
+handler = IMGWDataHandler()
+handler.divide_downloaded()
+handler.preprocess(2)"""
 
-
-fetcher=IMGWDataFetcher()
-fetcher.fetch()
+stats = IMGWStats()
+typ = "synop"
+stats.calculate_correlation([], "synop", Dirs.PARAMETER_MAP[typ][0], Dirs.PARAMETER_MAP[typ][1])
