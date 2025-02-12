@@ -11,6 +11,7 @@ class Dirs:
     FORECAST_DIR = ROOT_DIR / "data" / "forecast"
     PLOTS_DIR = ROOT_DIR / "data" / "plots"
     STATISTICS_DIR = ROOT_DIR / "data" / "statistics"
+    MAXSTATION = 50
 
     IMGW_URL = "https://danepubliczne.imgw.pl/data/dane_pomiarowo_obserwacyjne/dane_meteorologiczne/dobowe/"
     ENCODING = "ISO-8859-2"
@@ -47,8 +48,22 @@ class Dirs:
             data_type (str): Typ danych.
 
         Returns:
-            list[str]: Lista dostępnych stacji.
+            list[str]: Lista ścierzek do dostępnych stacji.
 
         """
         datadir = Dirs.SEPARATED_DIR / data_type
         return [d for d in datadir.iterdir()]
+    
+    @staticmethod
+    def get_stations_id( data_type: str) -> list[str]:
+        """Zwraca listę dostępnych stacji dla danego typu danych.
+
+        Args:
+            data_type (str): Typ danych.
+
+        Returns:
+            list[str]: Lista dostępnych stacji.
+
+        """
+        datadir = Dirs.SEPARATED_DIR / data_type
+        return [d.name.replace(".csv", "") for d in datadir.glob("*.csv")]

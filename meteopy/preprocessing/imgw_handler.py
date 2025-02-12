@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unicodedata
 from pathlib import Path
-
+import time
 import numpy as np
 import pandas as pd
 
@@ -56,7 +56,6 @@ class IMGWDataHandler:
                 output_subdir.mkdir(parents=True, exist_ok=True)
 
                 for csv_file in subdir.rglob("*.csv"):
-                    print(f"Przetwarzanie: {csv_file}")
                     self.split_csv_by_station(csv_file, output_subdir, encoding)
                     try:
                         csv_file.unlink()
@@ -106,17 +105,40 @@ class IMGWDataHandler:
         if mode == 2:
             # Tryb 2: uzupełnia brakujące dane wartością z poprzedniego dnia
             for col in value_cols:
-                data_frame[col] = data_frame[col].fillna(method="ffill")
+                data_frame[col] = data_frame[col].ffill()
 
         elif mode == 3:
             # Tryb 3: uzupełnia brakujące dane średnią z 50 poprzednich dni
-             for col in value_cols:
+            for col in value_cols:
+                self.logger.debug("Checking {}".format(col))
                 data_frame.loc[0, col] = 0 if pd.isna(data_frame.loc[0, col]) else data_frame.loc[0, col]
+                start_time = time.time()
                 while data_frame[col].isna().sum() > 0:
-                    data_frame[col] = data_frame[col].fillna(data_frame[col].rolling(window=50, min_periods=1).mean())
-
+                    if time.time() - start_time >=1:
+                        self.logger.warning("problem z obliczeniem śrdniej, stosowanie 2 trybu")
+                        return self.fill_missing_data(data_frame, value_cols, 2)
+                    else:
+                        data_frame[col] = data_frame[col].fillna(data_frame[col].rolling(window=50, min_periods=1).mean())
         else:
             self.logger.critical("Nieprawidłowy tryb. Wybierz 1, 2 lub 3.")
+        return data_frame
+    
+    def merge_to_date(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Łączy kolumny z datą w jedną kolumnę. UWAGA: kolumny z datą muszą być nazwane 'Year', 'Month' i 'Day'.
+
+        Args:
+            data_frame (pd.DataFrame): DataFrame zawierający dane.
+
+        Returns:
+            pd.DataFrame: DataFrame z połączoną kolumną z datą.
+
+        """
+        data_frame["Data"] = pd.to_datetime(data_frame[['Year', 'Month', 'Day']].rename(columns={"Year": "year", "Month": "month", "Day": "day"}))
+        cols = list(data_frame.columns)
+        cols.insert(2, cols.pop(cols.index("Data")))
+        data_frame=data_frame[cols]
+        data_frame = data_frame.drop(columns=['Year', 'Month', 'Day'])
+
         return data_frame
 
     def preprocess(self, mode: int) -> None:
@@ -133,9 +155,8 @@ class IMGWDataHandler:
         if Directory.exists():
             self.logger.info(f"Preprocessowanie {Path(Directory).name}")
             for csv_file in Directory.glob("*.csv"):
-                print(csv_file.name)
                 df = pd.read_csv(csv_file, encoding=Dirs.ENCODING, dtype={15: str})
-                if df.shape[1] ==12:
+                if df.shape[1] ==9:
                     self.logger.warning(f"plik {csv_file} został już przeprocesowany lub jest uszkodzony")
                     continue
                 elif df.shape[1] != 18:
@@ -154,12 +175,9 @@ class IMGWDataHandler:
                 df = self.fill_missing_data(df, df.columns[[6,7,8]], mode)
                 df[df.columns[[9,10]]] = df[df.columns[[9,10]]].fillna(0)
                 self.logger.debug("Zmiana daty")
-                df["Data"] = pd.to_datetime(df[['Year', 'Month', 'Day']].rename(columns={"Year": "year", "Month": "month", "Day": "day"}))
-                cols = list(df.columns)
-                cols.insert(2, cols.pop(cols.index("Data")))
-                df=df[cols]
+                df=self.merge_to_date(df)
                 df.to_csv(csv_file, encoding=Dirs.ENCODING, index=False)
-                self.logger.debug(f"pomyślnie preprocessowano plik: {Path(csv_file).name}")
+                
             self.logger.info(f"pomyślnie przetworzono katalog: {Directory}")
 
 
@@ -168,27 +186,25 @@ class IMGWDataHandler:
             self.logger.info(f"Preprocessowanie {Path(Directory).name}")
             for csv_file in Directory.glob("*.csv"):
                 df = pd.read_csv(csv_file, encoding=Dirs.ENCODING, dtype={15: str})
-                if df.shape[1] == 9:
+                if df.shape[1] == 6:
                     self.logger.warning(f"plik {csv_file} został już przeprocesowany lub jest uszkodzony")
                     continue
                 if df.shape[1] != 16:
                     self.logger.critical(f"plik {csv_file} uszkodzony -> usuwanie")
                     csv_file.unlink()
                     continue
-                df = self.replace_with_na(df, [6, 9, 11, 12, 13, 14, 15])
+                df = self.replace_with_na(df, [6, 9, 11])
                 df[["Year", "Month", "Day"]] = df[["Year", "Month", "Day"]].apply(pd.to_numeric, errors="coerce")
                 df.dropna(subset=["Year", "Month", "Day"], inplace=True)
                 df.drop(columns=df.columns[[6, 7, 9, 11, 12, 13, 14, 15]], inplace=True)
                 df.columns = ["Kod_stacji", "Nazwa_stacji", "Year", "Month", "Day", "Suma_dobowa_opadow_[mm]", "Wysokosc_pokrywy_sniesnej_[cm]", "Wysokosc_swiezospalego_sniegu_[cm]"]
                 df.sort_values(["Year", "Month", "Day"], ascending=[True, True, True], inplace=True)
+                self.logger.debug(f"Filling missing data {csv_file}")
                 df = self.fill_missing_data(df, df.columns[[5]], mode)      # uzupełnia dane wydług trybu
                 df[df.columns[[6, 7]]] = df[df.columns[[6, 7]]].fillna(0)       # uzupełnia dane n/a zerami tam gdzie średnie są bezsensu
-                df["Data"] = pd.to_datetime(df[["Year", "Month", "Day"]].rename(columns={"Year": "year", "Month": "month", "Day": "day"}))
-                cols = list(df.columns)
-                cols.insert(2, cols.pop(cols.index("Data")))
-                df = df[cols]
+                self.logger.debug("merging: {csv_file}")
+                df = self.merge_to_date(df)
                 df.to_csv(csv_file, encoding=Dirs.ENCODING, index=False)
-                self.logger.debug(f"pomyślnie preprocessowano plik: {Path(csv_file).name}")
             self.logger.info(f"pomyślnie przetworzono katalog: {Directory}")
 
         Directory = Dirs.SEPARATED_DIR / "synop"
@@ -196,7 +212,7 @@ class IMGWDataHandler:
             self.logger.info(f"Preprocessowanie {Path(Directory).name}")
             for csv_file in Directory.glob("*.csv"):
                 df = pd.read_csv(csv_file, encoding=Dirs.ENCODING, dtype={15: str})
-                if df.shape[1] == 15:
+                if df.shape[1] == 12:
                     self.logger.warning(f"plik {csv_file} został już przeprocesowany lub jest uszkodzony")
                     continue
                 if df.shape[1] != 23:
@@ -212,10 +228,7 @@ class IMGWDataHandler:
                 df.sort_values(["Year", "Month", "Day"], ascending=[True, True, True], inplace=True)
                 df = self.fill_missing_data(df, df.columns[[5, 6, 7, 8, 9, 10, 11]], mode)
                 df[df.columns[[12, 13]]] = df[df.columns[[12, 13]]].fillna(0)
-                df["Data"] = pd.to_datetime(df[["Year", "Month", "Day"]].rename(columns={"Year": "year", "Month": "month", "Day": "day"}))
-                cols = list(df.columns)
-                cols.insert(2, cols.pop(cols.index("Data")))
-                df = df[cols]
+                df = self.merge_to_date(df)
                 df.to_csv(csv_file, encoding=Dirs.ENCODING, index=False)
                 self.logger.debug(f"pomyślnie preprocessowano plik: {Path(csv_file).name}")
             self.logger.info(f"pomyślnie przetworzono katalog: {Directory}")

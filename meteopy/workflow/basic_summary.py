@@ -15,8 +15,8 @@ logger = get_logger(__name__)
 @click.command()
 @click.argument("data_type", type=int)
 def basic_summary(data_type: int) -> None:
-    """NAME
-        basic_summary - Generates basic statistics for selected parameters based on user input.
+    """
+        Generates basic statistics for selected parameters based on user input.
 
     SYNOPSIS
         basic_summary(data_type: int)
@@ -29,14 +29,14 @@ def basic_summary(data_type: int) -> None:
     DESCRIPTION
         Generates basic statistics for selected parameters based on user input.
 
-        The function performs the following steps:
-        1. Validates the provided data type.
-        2. Retrieves the list of parameters associated with the data type.
-        3. Displays the list of parameters for the user to choose from.
-        4. Prompts the user to select a parameter from the list.
-        5. Validates the selected parameter.
-        6. Retrieves available station paths for the given data type.
-        7. Randomly selects 5 stations (or fewer if less than 5 are available).
+        The function performs the following steps:\n
+        1. Validates the provided data type.\n
+        2. Retrieves the list of parameters associated with the data type.\n
+        3. Displays the list of parameters for the user to choose from.\n
+        4. Prompts the user to select a parameter from the list.\n
+        5. Validates the selected parameter.\n
+        6. Retrieves available station paths for the given data type.\n
+        7. Randomly selects 5 stations (or fewer if less than 5 are available).\n
         8. Processes data for each selected station and generates statistics.
 
         If any errors occur during the process (e.g., invalid data type or parameter selection),
@@ -68,7 +68,7 @@ def basic_summary(data_type: int) -> None:
             parameter = parameter_list[parameter_index - 1]
             selected_parameters.append(parameter)
         except IndexError:
-            logger.error("Niepoprawny number parametru. Wybierz number od 1 do %d.", len(parameter_list))
+            logger.error("Niepoprawny numer parametru. Wybierz numer od 1 do %d.", len(parameter_list))
             continue
 
     if not selected_parameters:
@@ -86,10 +86,10 @@ def basic_summary(data_type: int) -> None:
     random_stations = [ station.name.replace(".csv","") for station in random_stations]
     logger.info("Wybrane parametry: %s", ", ".join(selected_parameters))
     stats = IMGWStats()
-    stats.calculate_basic_stat(random_stations, data_type_str, selected_parameters)
+    stats.calculate_basic_stat(data_type_str, selected_parameters, random_stations)
     visualizer = IMGWDataVisualizer()
 
     for station_path in random_stations:
         visualizer.plot_time_series(data_type_str, selected_parameters, start, end, [station_path])
-        visualizer.plot_distribution(data_type_str, selected_parameters, start, end, [station_path])
+        visualizer.distribution_polts(data_type_str, selected_parameters, start, end, [station_path])
     logger.info("Generowanie statystyk zakończone.")

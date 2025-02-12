@@ -14,7 +14,7 @@ logger = get_logger(__name__)
 
 @click.command()
 def full_analysis():
-    """Przeprowadź cały process pobierania i wygeneruje wszystkie wykresy dla wszystkich stacji dla wszystkich
+    """Pobiera dane i generuje wszystkie wykresy dla wszystkich stacji dla wszystkich
     parametrów (UWAGA: może to potrwać dłuższą chwilę i zająć nawet 10GB RAMU (dla 1000 stacji), gdyż wsystkie stację są
     nanoszone na jeden wykres dla IMGWDataVisualizer)."""
     start_year = click.prompt("Podaj rok początkowy", type=int)
@@ -43,15 +43,14 @@ def full_analysis():
     forecaster = IMGWSimpleForecaster()
     stats = IMGWStats()
     typ = Dirs.DATA_TYPES[data_type - 1]
-
-    visualizer.plot_time_series(data_type=typ, parameters=[],
-                                start_date=Start_date, end_date=End_date, stations=[])
-
-    visualizer.plot_distribution(data_type=typ, parameters=[],
-                                start_date=Start_date, end_date=End_date, stations=[])
-
-    #stats.calculate_correlation([], typ, Dirs.PARAMETER_MAP[typ][0], Dirs.PARAMETER_MAP[typ][1])
-    stats.calculate_basic_stat([], typ, Dirs.PARAMETER_MAP[typ])
-
+    click.echo("Tworzenie wykresów szeregów czasowych...")
+    visualizer.plot_time_series(typ, [], Start_date, End_date, Dirs.get_stations_id(typ)[:Dirs.MAXSTATION])
+    click.echo("Tworzenie rozkładów parametrów...")
+    visualizer.distribution_polts(typ, [], Start_date, End_date, Dirs.get_stations_id(typ)[:Dirs.MAXSTATION])
+    click.echo("Obliczanie statystyk...")
+    stats.calculate_basic_stat(typ, Dirs.PARAMETER_MAP[typ])
+    click.echo("liczenie korelacji dla przykładowych parametrów...")
+    stats.calculate_correlation(typ, Dirs.PARAMETER_MAP[typ][0], Dirs.PARAMETER_MAP[typ][1])
+    click.echo("Tworzenie prognóz...")
     for i in range(len(Dirs.PARAMETER_MAP[typ])):
-        forecaster.plot_forecast(typ, Start_date, End_date, f"{end_year + 1}-12-31", [], Dirs.PARAMETER_MAP[typ][i])
+        forecaster.plot_forecast(typ, Start_date, End_date, f"{end_year + 1}-12-31", Dirs.get_stations_id(typ)[:Dirs.MAXSTATION], Dirs.PARAMETER_MAP[typ][i])
