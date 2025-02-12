@@ -16,14 +16,15 @@ class IMGWSimpleForecaster:
 
     def linear_regression_forecast(self, data_type: str, start_date: str, end_date: str, till_predict_date: str, stations: list[str], parameter: str):
         """Tworzy prosty model regresji liniowej do przewidywania wartości na podstawie danych historycznych.
-
-        :param data_type: Typ danych (np. 'temperature')
-        :param start_date: Data początkowa w formacie 'YYYY-MM-DD'
-        :param end_date: Data końcowa w formacie 'YYYY-MM-DD'
-        :param till_predict_date: Data do której przewidujemy wartości w formacie 'YYYY-MM-DD'
-        :param stations: Lista stacji do uwzględnienia
-        :param parameter: Parameter do przewidywania
-        :return: Przewidywane wartości na podstawie modelu regresji liniowej
+        Args:
+            data_type: Typ danych (np. 'temperature')
+            start_date: Data początkowa w formacie 'YYYY-MM-DD'
+            end_date: Data końcowa w formacie 'YYYY-MM-DD'
+            till_predict_date: Data do której przewidujemy wartości w formacie 'YYYY-MM-DD'
+            stations: Lista stacji do uwzględnienia
+            parameter: Parameter do przewidywania
+        Returns:
+            Przewidywane wartości na podstawie modelu regresji liniowej
 
         """
         for station in stations:

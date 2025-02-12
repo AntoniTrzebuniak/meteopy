@@ -88,6 +88,7 @@ class IMGWDataVisualizer:
 
         for fig, parameter in zip(figures, parameters):
             output_file = OUTPUT_DIR / f"{data_type}_multi_{parameter.replace('/', '_')}.png"
+            warnings.filterwarnings("ignore", category=UserWarning)
             fig.savefig(output_file, bbox_inches="tight")
             plt.close(fig)
             self.logger.info("Zapisano wykres do pliku: %s", output_file)
