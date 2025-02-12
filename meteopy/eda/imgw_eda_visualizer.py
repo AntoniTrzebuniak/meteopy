@@ -30,6 +30,9 @@ class IMGWDataVisualizer:
             stations (list[str]): Lista ID stacji. Jeśli None, wykresy są tworzone dla wszystkich stacji.
 
         """
+        OUTPUT_DIR = Dirs.PLOTS_DIR/data_type
+        OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
         if parameters == []:
             self.logger.info("Analiza dla wszystkich parametrów")
             parameters = self.parameter_map[data_type]
@@ -84,7 +87,7 @@ class IMGWDataVisualizer:
                 ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", borderaxespad=0.)
 
         for fig, parameter in zip(figures, parameters):
-            output_file = Dirs.PLOTS_DIR / data_type / f"{data_type}_multi_{parameter.replace('/', '_')}.png"
+            output_file = OUTPUT_DIR / f"{data_type}_multi_{parameter.replace('/', '_')}.png"
             fig.savefig(output_file, bbox_inches="tight")
             plt.close(fig)
             self.logger.info("Zapisano wykres do pliku: %s", output_file)
