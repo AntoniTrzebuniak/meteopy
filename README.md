@@ -5,8 +5,8 @@
 1. **Klonowanie repozytorium**
 
     ```bash
-    git clone https://github.com/TwojeRepozytorium/python-1-project-AntoniTrzebuniak.git
-    cd python-1-project-AntoniTrzebuniak
+    git clone https://github.com/AntoniTrzebuniak/meteopy.git
+    cd meteopy
     ```
 
 2. **Zainstalowanie pakietu**
